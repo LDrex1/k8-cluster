@@ -2,8 +2,8 @@ from pydantic import BaseModel
 from typing import Optional
 from fastapi import APIRouter, status
 
-from models import Workout
-from deps import db_dependency, user_dependency
+from ..models import Workout
+from ..deps import db_dependency, user_dependency
 
 router = APIRouter(
     prefix='/workouts',

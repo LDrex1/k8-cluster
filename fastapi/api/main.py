@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth, workouts, routines
+from .routers import auth, workouts, routines
 
-from database import Base, engine
+from .database import Base, engine
 
 app = FastAPI()
 
