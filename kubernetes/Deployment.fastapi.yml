@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+spec:
+  selector:
+    matchLabels:
+      app: fastapi
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+        - name: fastapi
+          image: f # To be taken from dockerhub or gitlab
+          ports:
+            - containerPort: 8080
