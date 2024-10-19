@@ -21,4 +21,10 @@ module "vpc" {
   source = "./modules/network/vpc"
 
 }
+module "ec2" {
+  source = "./modules/compute/ec2"
+
+  k8_subnet_id      = module.vpc.k8_subnet_id
+  bastion_subnet_id = module.vpc.bastion_subnet_id
+}
 
