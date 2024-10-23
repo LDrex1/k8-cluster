@@ -80,6 +80,18 @@ resource "aws_subnet" "bastion" {
 }
 
 
+resource "aws_security_group" "bastion_web_app" {
+  name   = "bastion-web-app-sg"
+  vpc_id = aws_vpc.k8_vpc.id
+
+
+
+  tags = {
+    Name   = "bastion_web_host"
+    Source = "Terraform"
+
+  }
+}
 resource "aws_security_group" "k8_master_node" {
   name   = "k8_master_sg"
   vpc_id = aws_vpc.k8_vpc.id
@@ -109,11 +121,12 @@ resource "aws_security_group" "k8_worker_node" {
 resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
 
   for_each = {
-    k8_master_node = aws_security_group.k8_master_node.id,
-    k8_worker_node = aws_security_group.k8_worker_node.id,
+    k8_master_node          = aws_security_group.k8_master_node.id,
+    k8_worker_node          = aws_security_group.k8_worker_node.id,
+    Bastion_host_for_webapp = aws_security_group.bastion_web_app.id
   }
   depends_on = [aws_security_group.k8_master_node,
-  aws_security_group.k8_worker_node, ]
+  aws_security_group.k8_worker_node, aws_security_group.bastion_web_app]
 
   security_group_id = each.value
   cidr_ipv4         = "0.0.0.0/0"
@@ -144,5 +157,14 @@ resource "aws_vpc_security_group_ingress_rule" "allow_k8" {
   to_port           = 32677
   depends_on = [aws_security_group.k8_master_node,
   aws_security_group.k8_worker_node, ]
+}
+resource "aws_vpc_security_group_egress_rule" "allow_outbound_ssh" {
+  security_group_id = aws_security_group.bastion_web_app.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 22
+  ip_protocol       = "TCP"
+  to_port           = 22
+
+  tags = { Name : "SSH rule" }
 }
 
