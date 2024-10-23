@@ -24,7 +24,12 @@ module "vpc" {
 module "ec2" {
   source = "./modules/compute/ec2"
 
-  k8_subnet_id      = module.vpc.k8_subnet_id
-  bastion_subnet_id = module.vpc.bastion_subnet_id
+  k8_subnet_id                = module.vpc.k8_subnet_id
+  bastion_subnet_id           = module.vpc.bastion_subnet_id
+  k8_worker_security_group_id = module.vpc.k8_worker_security_group_id
+  bastion_security_group_id   = module.vpc.bastion_security_group_id
+  k8_master_sg_id             = module.vpc.k8_master_sg_id
+
+
 }
 
