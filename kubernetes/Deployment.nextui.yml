@@ -14,6 +14,13 @@ spec:
     spec:
       containers:
         - name: workoutui
-          image: f # To be taken from dockerhub or gitlab
+          image: lordrex/workout-nextjs:v1.0.0 # To be taken from dockerhub or gitlab
           ports:
-            - containerPort: 8080
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "200m"
+            limits:
+              memory: "350Mi"
+              cpu: "250m"
