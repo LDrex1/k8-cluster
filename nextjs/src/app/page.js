@@ -15,25 +15,25 @@ const Home = () => {
   const [routineDescription, setRoutineDescription] = useState("");
   const [selectedWorkouts, setSelectedWorkouts] = useState([]);
 
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
     const fetchWorkoutsAndRoutines = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const [workoutsResponse, routinesResponse] = await Promise.all([
-          axios.get("http://localhost:8000/workouts/workouts", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("http://localhost:8000/routines", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
-        console.log(workoutsResponse);
-        setWorkouts(workoutsResponse.data);
-        setRoutines(routinesResponse.data);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
+      if (window) {
+        try {
+          const token = window.localStorage.getItem("token");
+          const [workoutsResponse, routinesResponse] = await Promise.all([
+            axios.get("http://localhost:8000/workouts/workouts", {
+              headers: { Authorization: `Bearer ${token}` },
+            }),
+            axios.get("http://localhost:8000/routines", {
+              headers: { Authorization: `Bearer ${token}` },
+            }),
+          ]);
+
+          setWorkouts(workoutsResponse.data);
+          setRoutines(routinesResponse.data);
+        } catch (error) {
+          console.error("Failed to fetch data:", error);
+        }
       }
     };
 
@@ -63,6 +63,7 @@ const Home = () => {
         description: routineDescription,
         workouts: selectedWorkouts,
       });
+      setRoutines([...routines, response.data]);
       setRoutineName("");
       setRoutineDescription("");
       setSelectedWorkouts([]);
